@@ -1,0 +1,1136 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Provides fast, reliable access to housing benefit information.",
+    "title": "Citizen Housing Benefit API",
+    "contact": {
+      "name": "Citizen Information Exchange"
+    }
+  },
+  "host": "localhost:8990",
+  "basePath": "/housing-benefit",
+  "tags": [
+    {
+      "name": "External Housing Benefit API"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/external/claim": {
+      "post": {
+        "tags": [
+          "External Housing Benefit API"
+        ],
+        "summary": "postClaim",
+        "operationId": "postClaimUsingPOST",
+        "consumes": [
+          "application/json;charset=UTF-8"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "X-Correlation-Id",
+            "in": "header",
+            "description": "Identifier used to locate related transactions (e.g. 12345678-1234-1234-1234-123456789012)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-La-Id",
+            "in": "header",
+            "description": "More about the Local Authority ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "claimRequest",
+            "description": "Housing Benefit Claim",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/claimRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Claim Submitted"
+          },
+          "400": {
+            "description": "Invalid Claim",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "claimRequest": {
+      "type": "object",
+      "properties": {
+        "claimReferenceNumber": {
+          "type": "string",
+          "description": "Claim Reference Number (SHBE field 2)",
+          "pattern": "^[a-zA-Z0-9]{20}$"
+        },
+        "entitlements": {
+          "type": "array",
+          "description": "Entitlements",
+          "items": {
+            "$ref": "#/definitions/entitlement"
+          }
+        },
+        "localAuthorityReferenceNumber": {
+          "type": "string",
+          "description": "Local Authority ID: Code allocated by DWP IAD",
+          "pattern": "^[0-9]{6}$"
+        },
+        "softwareProvider": {
+          "type": "string",
+          "description": "Software Provider (SHBE field 274)\n1 : Northgate-IS\n2 : Capita (Previously known as Academy)\n3 : Northgate Orbis\n5 : Civica Open Revenues (Previously known as IBS)\n6 : In House\n99 : Other\n",
+          "pattern": "^(1|2|3|5|6|99)$"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2019-02-06T10:12:04Z",
+          "description": "Timestamp"
+        }
+      },
+      "title": "claimRequest"
+    },
+    "claimant": {
+      "type": "object",
+      "properties": {
+        "addressLine1": {
+          "type": "string",
+          "description": "Claimant's address line 1 (SHBE field 10)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "addressLine2": {
+          "type": "string",
+          "description": "Claimant's address line 2 (SHBE field 280)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "addressLine3": {
+          "type": "string",
+          "description": "Claimant's address line 3 (SHBE field 281)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "addressLine4": {
+          "type": "string",
+          "description": "Claimant's address line 4 (SHBE field 282)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "appointee": {
+          "type": "boolean",
+          "description": "Appointee flag (SHBE field 286)"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Claimant's date of birth (SHBE field 8)"
+        },
+        "forename1": {
+          "type": "string",
+          "description": "Claimant's first forename (SHBE field 7)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "forename2": {
+          "type": "string",
+          "description": "Claimant's second forename (SHBE field 279)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "gender": {
+          "type": "string",
+          "description": "Claimant's gender (SHBE field 177)\nM : Male\nF : Female\nX : gender is unknown\n",
+          "pattern": "^$|^[MFX]$"
+        },
+        "income": {
+          "description": "Claimant’s income",
+          "$ref": "#/definitions/income"
+        },
+        "jointTenancy": {
+          "type": "boolean",
+          "description": "Joint tenancy flag (SHBE field 285)"
+        },
+        "nino": {
+          "type": "string",
+          "description": "Claimant's National Insurance Number (SHBE field 4)",
+          "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIUV])[A-Z]|[A-Z]([DFIOUV]))[A-Z]{2})[0-9]{6}[A-D]?$"
+        },
+        "numberOfBedrooms": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of bedrooms (SHBE field 278)",
+          "minimum": 0,
+          "maximum": 10,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "postcode": {
+          "type": "string",
+          "description": "Claimant's postcode (SHBE field 11)",
+          "minLength": 0,
+          "maxLength": 8
+        },
+        "shortTermSupportedAccommodation": {
+          "type": "string",
+          "description": "Short term supported accommodation indicator (SHBE field 48)\n0 : Not exempt or specified accommodation\n1 : Accommodation is short-term, emergency or transitional\n2 : Accommodation is longer term\n",
+          "pattern": "^[0-2]$"
+        },
+        "student": {
+          "type": "boolean",
+          "description": "Claimant's student indicator (SHBE field 59)"
+        },
+        "supportedAccommodation": {
+          "type": "string",
+          "description": "Supported accommodation indicator (SHBE field 49)\n0 : Not “Specified Accommodation”\n1 : Supported Exempt Accommodation\n2 : Specified Accommodation (not including Supported Exempt Accommodation\n",
+          "pattern": "^[0-2]$"
+        },
+        "surname": {
+          "type": "string",
+          "description": "Claimant's surname (SHBE field 6)",
+          "minLength": 0,
+          "maxLength": 35
+        },
+        "telephoneNumber": {
+          "type": "string",
+          "description": "Claimant’s telephone number (SHBE field 212)",
+          "minLength": 0,
+          "maxLength": 12
+        },
+        "tenancyType": {
+          "type": "string",
+          "description": "Tenancy type (SHBE field 9)\n1 : LA tenant\n2 : Private tenant regulated tenancy (non HA / RSL)\n3 : Private tenant deregulated tenancy (non HA / RSL)\n4 : Housing Association / RSL tenants (including Housing Action Trusts, but excluding temporary or short-term accommodation cases.)\n5 : Owner Occupier\n6 : Private tenant other (use only if 2, 3, 4 or 10 cannot be used)\n7 : Tenure not known\n8 : Non HRA rent rebate and HRA rent rebate subject to the LHA-based subsidy rules\n9 : Private Boarder\n10 : Temporary or short-term accommodation cases where the landlord is a registered Housing Association, and the claim is subject to the LHA-based subsidy rules.\n",
+          "pattern": "^(1|2|3|4|5|6|7|8|9|10)$"
+        },
+        "title": {
+          "type": "string",
+          "description": "Claimant's title (SHBE field 5)",
+          "minLength": 0,
+          "maxLength": 4
+        }
+      },
+      "title": "claimant"
+    },
+    "dependant": {
+      "type": "object",
+      "properties": {
+        "childBenefitReferenceNumber": {
+          "type": "string",
+          "description": "Dependant's Child Benefit Reference Number (SHBE field 309)"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Dependant's date of birth (SHBE field 315)"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Dependant's end date (SHBE field 311)"
+        },
+        "forename": {
+          "type": "string",
+          "description": "Dependant's forename (SHBE field 314)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "nino": {
+          "type": "string",
+          "description": "Dependant's National Insurance Number (SHBE field 309)",
+          "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIUV])[A-Z]|[A-Z]([DFIOUV]))[A-Z]{2})[0-9]{6}[A-D]?$"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Dependant's start date (SHBE field 310)"
+        },
+        "surname": {
+          "type": "string",
+          "description": "Dependant's surname (SHBE field 313)",
+          "minLength": 0,
+          "maxLength": 35
+        },
+        "title": {
+          "type": "string",
+          "description": "Dependant's title (SHBE field 312)",
+          "minLength": 0,
+          "maxLength": 4
+        }
+      },
+      "title": "dependant"
+    },
+    "entitlement": {
+      "type": "object",
+      "properties": {
+        "carerPremiumAwarded": {
+          "type": "boolean",
+          "description": "Carer premium awarded (SHBE field 120)"
+        },
+        "claimant": {
+          "description": "Claimant",
+          "$ref": "#/definitions/claimant"
+        },
+        "closedDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Date HB claim closed / withdrawn / decided unsuccessful / defective (SHBE field 202)"
+        },
+        "dateChangeEffectiveFrom": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Date change of details are effective from (when the change has an effect on benefit entitlement) (SHBE field 253)"
+        },
+        "dateNotifiedOfClaimChange": {
+          "type": "string",
+          "format": "date",
+          "description": "Date LA first notified of change in claim details  (SHBE field 251)"
+        },
+        "dateOfFirstPayment": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Date of first payment on most recent HB claim following a full decision being made on the claim (SHBE field 72)"
+        },
+        "dateSupersessionDecisionMade": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Date supersession decision was made on the HB claim (SHBE field 255)"
+        },
+        "dependants": {
+          "type": "array",
+          "description": "Dependants",
+          "items": {
+            "$ref": "#/definitions/dependant"
+          }
+        },
+        "disabilityPremiumAwarded": {
+          "type": "boolean",
+          "description": "Disability premium awarded (SHBE field 117)"
+        },
+        "disabledChildPremiumAwarded": {
+          "type": "boolean",
+          "description": "Disabled Child premium awarded (SHBE field 119)"
+        },
+        "enhancedDisabilityPremiumAwarded": {
+          "type": "boolean",
+          "description": "Enhanced Disability premium awarded (SHBE field 121)"
+        },
+        "familyLoneParentPremiumAwarded": {
+          "type": "boolean",
+          "description": "Family (lone parent) premium awarded (SHBE field 116)"
+        },
+        "familyPremiumAwarded": {
+          "type": "boolean",
+          "description": "Family premium awarded (SHBE field 115)"
+        },
+        "firstDecisionOnHbClaimDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Date of first decision on most recent HB claim (SHBE field 37)"
+        },
+        "housingBenefitScheme": {
+          "type": "string",
+          "description": "The HB scheme the claim is assessed in accordance with (SHBE field 63)\n1 : Claim received on or after 02/01/96 but prior to 06/10/97. Because of continuous entitlement to HB, the claimant remains entitled to a 50% ‘top up’ between the LRR and the CRR\n2 : Claim received anytime on or after 07/10/96 , with the claimant potentially subject to the SRR \n3 : Claim received on or after 06/10/97 with the claimant potentially subject to the full impact of the LRR \n4 : The restrictions of the LRR or SRR schemes do not apply\n",
+          "pattern": "^[1-4]$"
+        },
+        "howWasChangeIdentified": {
+          "type": "string",
+          "description": "If not annual uprating, how was the change identified (SHBE field 254)\n1 : Claimant letter/e-mail/fax\n2 : Claimant telephone call\n3 : Notified through e-channels\n4 : JCP report\n5 : Pension Service report\n6 : 3rd Party (e.g. Landlord) report\n7 : LA intervention: visit\n8 : LA intervention: review\n9 : Fraud investigation\n10 : LA activity: other (diary date prompt, LHA annual reviews etc)\n11 : Accuracy check\n12 : Outcome of appeal / reconsideration / revision\n14 : Royal Mail: Do not re-direct \n15 : CIS prompt/ATLAS\n16 : Tell Us Once\n17 : One-strike/Two-strike\n19 : Verify Earnings and Pensions Service (VEP)\n99 : Other\n",
+          "pattern": "^(1|2|3|4|5|6|7|8|9|10|11|12|14|15|16|17|19|99)$"
+        },
+        "landlord": {
+          "description": "Landlord",
+          "$ref": "#/definitions/landlord"
+        },
+        "lctrStatus": {
+          "type": "string",
+          "description": "Status of LCTR claim at extract date (SHBE field 34)\n0 : LCTR not in payment\n1 : LCTR in payment \n2 : LCTR suspended\n",
+          "pattern": "^[0-2]$"
+        },
+        "lhaRate": {
+          "type": "number",
+          "example": 0,
+          "description": "LHA rate as published (SHBE field 209)"
+        },
+        "lhaRegulationsApplied": {
+          "type": "boolean",
+          "description": "LHA regulations applied (SHBE field 62)"
+        },
+        "locality": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Broad Rental Market Area (BRMA) code for the location where the claimant lives (SHBE field 208)",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "nonDependants": {
+          "type": "array",
+          "description": "Non-dependants",
+          "items": {
+            "$ref": "#/definitions/nonDependant"
+          }
+        },
+        "nonSelfContainedAccommodation": {
+          "type": "boolean",
+          "description": "Non self contained accommodation indicator (SHBE field 205)"
+        },
+        "numberOfAdditionalRoomsForNonDependantChildrenAwayWithArmedForces": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of additional rooms for non-dependant children away on operations in the armed forces (SHBE field 28)",
+          "minimum": 0,
+          "maximum": 4,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "numberOfAdditionalRoomsForSeverelyDisabledPerson": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of additional rooms for severely disabled person(s) (SHBE field 27)",
+          "minimum": 0,
+          "maximum": 4,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "numberOfBedroomsEntitledTo": {
+          "type": "integer",
+          "format": "int32",
+          "description": "For LHA cases and social sector cases, the number of rooms / bedrooms entitled to. Also bedroom number for temporary or short term accommodation cases subject to the LHA based subsidy rules (SHBE field 206)",
+          "minimum": 0,
+          "maximum": 20,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "numberOfChildDependants": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of child dependants (SHBE field 13)",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "numberOfNonDependants": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of non dependants (SHBE field 14)",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "partner": {
+          "type": "string",
+          "description": "Partner flag (SHBE field 123)\n0 : No partner\n1 : Yes one partner\n2 : Yes more than one partner \n",
+          "pattern": "^[0-2]$"
+        },
+        "partners": {
+          "type": "array",
+          "description": "Partners",
+          "items": {
+            "$ref": "#/definitions/partner"
+          }
+        },
+        "passportedStandardClaimIndicator": {
+          "type": "string",
+          "description": "Passported / Standard claim indicator (SHBE field 12)\n1 : in receipt of IS\n2 : in receipt of Pension Credit (GC)\n3 : in receipt of JSA (IB)\n4 : Standard case (including Savings Credit only)\n5 : in receipt of ESA (IB)\n",
+          "pattern": "^[1-5]$"
+        },
+        "paymentFrequency": {
+          "type": "string",
+          "description": "Frequency of payment of HB (SHBE field 45)\n1 : Weekly\n2 : Fortnightly\n3 : Four weekly\n4 : Calendar Monthly\n5 : Three monthly\n6 : Six monthly\n99 : Other",
+          "pattern": "^[1-6]|99$"
+        },
+        "reasonForClosure": {
+          "type": "string",
+          "description": "Reason that HB claim was closed / withdrawn / decided unsuccessful / defective (SHBE field 210)\n1 : Claimant death\n2 : Claimant moved outside LA area\n3 : Household income increased above HB threshold\n4 : Household capital increased above HB capital limits\n5 : Claimant moved outside scope of HB (into a nursing home, etc)\n6 : Claim withdrawn\n7 : Claim decided unsuccessful\n8 : Defective claim\n9 : Other\n10 :  Natural Migration to Universal Credit\n11 :  Managed Migration to Universal Credit Successful\n12 :  Managed Migration to Universal Credit Failure (i.e. where the claimant fails to do what is necessary for UC to take up the claim)\n13 :  Managed Migration to Pension Credit\n",
+          "pattern": "^(1|2|3|4|5|6|7|8|9|10|11|12|13)$"
+        },
+        "reductionAsResultOfBenefitCap": {
+          "type": "number",
+          "example": 0,
+          "description": "Amount HB award is reduced as a result of benefit cap (SHBE field 42)"
+        },
+        "rent": {
+          "description": "Rent",
+          "$ref": "#/definitions/rent"
+        },
+        "rsrsEasementReasonAdditionalRoomsForSeverelyDisabledPerson": {
+          "type": "boolean",
+          "description": "RSRS easement reason: Receives an additional (& separate) bedroom/s for severely disabled person(s) who can't share and would otherwise be expected to do so (SHBE field 25)"
+        },
+        "rsrsEasementReasonFosterCarer": {
+          "type": "boolean",
+          "description": "RSRS easement reason: Receives an additional bedroom for foster carers (SHBE field 24)"
+        },
+        "rsrsEasementReasonNoAdditionalRoom": {
+          "type": "boolean",
+          "description": "RSRS easement reason: No additional room (SHBE field 22)"
+        },
+        "rsrsEasementReasonNonDependantChildrenAwayWithArmedForces": {
+          "type": "boolean",
+          "description": "RSRS easement reason: Retains a bedroom/s for non-dependant children away on operations in the armed forces (SHBE field 26)"
+        },
+        "rsrsEasementReasonNonResidentCarer": {
+          "type": "boolean",
+          "description": "RSRS easement reason: Receives an additional bedroom entitlement due to a non-resident overnight carer (SHBE field 23)"
+        },
+        "scPremium": {
+          "type": "boolean",
+          "description": "SC premium flag (SHBE field 299)"
+        },
+        "severeDisabilityPremiumAwarded": {
+          "type": "boolean",
+          "description": "Severe Disability premium awarded (SHBE field 118)"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "HB Claim entitlement start date (SHBE field 41)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of HB claim at extract date (SHBE field 33)\n0 : HB not in payment (other than suspended)\n1 : HB in payment\n2 : HB payment suspended\n",
+          "pattern": "^[0-2]$"
+        },
+        "transitionalProtectionFromLha": {
+          "type": "boolean",
+          "description": "Transitional protection from the national rollout of the LHA (SHBE field 207)"
+        },
+        "typeOfChange": {
+          "type": "string",
+          "description": "Type of change (SHBE field 250)\n1 : Automated annual uprating\n2 : All other changes",
+          "pattern": "^[1-2]$"
+        },
+        "weeklyEntitlement": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly Housing Benefit entitlement (SHBE field 43)"
+        },
+        "weeklyEntitlementAfterChange": {
+          "type": "number",
+          "example": 0,
+          "description": "New weekly HB entitlement after the change (SHBE field 248)"
+        },
+        "weeklyEntitlementBeforeChange": {
+          "type": "number",
+          "description": "Weekly HB entitlement before change (SHBE field 50)"
+        },
+        "weeklyUnderOccupationDeduction": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly amount of social sector size criteria/ under-occupation deduction (SHBE field 21)"
+        },
+        "wracPremium": {
+          "type": "boolean",
+          "description": "WRAC premium flag (SHBE field 298)"
+        }
+      },
+      "title": "entitlement"
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "messages": {
+          "type": "array",
+          "description": "Error messages",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "HTTP status"
+        }
+      },
+      "title": "error"
+    },
+    "income": {
+      "type": "object",
+      "properties": {
+        "aif": {
+          "type": "number",
+          "example": 0,
+          "description": "Assessed Income Figure (SHBE field 73 or 131)"
+        },
+        "apprenticeshipScheme": {
+          "type": "number",
+          "example": 0,
+          "description": "Apprenticeship Scheme (SHBE field 111 or 168)"
+        },
+        "attendanceAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "Attendance Allowance (SHBE field 82 or 139)"
+        },
+        "bereavementAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "Bereavement Allowance (SHBE field 109 or 166))"
+        },
+        "carersAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "Carers Allowance (SHBE field 103 or 159)"
+        },
+        "childBenefit": {
+          "type": "number",
+          "example": 0,
+          "description": "Child Benefit (SHBE field 84 or 141)"
+        },
+        "contributionBasedJsa": {
+          "type": "number",
+          "example": 0,
+          "description": "Contribution-Based JSA (SHBE field 89 or 145)"
+        },
+        "fromBoarders": {
+          "type": "number",
+          "example": 0,
+          "description": "From Boarders (SHBE field 92 or 148)"
+        },
+        "fromDlaCareOrPipLivingComponents": {
+          "type": "number",
+          "example": 0,
+          "description": "Disability Living Allowance - care component or Personal Independence Payment - living component (SHBE field 99 or 155)"
+        },
+        "fromDlaOrPipMobilityComponents": {
+          "type": "number",
+          "example": 0,
+          "description": "Disability Living Allowance - mobility component or Personal Independence Payment - mobility component (SHBE field 100 or 156)"
+        },
+        "fromSubTenants": {
+          "type": "number",
+          "example": 0,
+          "description": "From Sub Tenants (SHBE field 91 or 147)"
+        },
+        "fromWorkingAndChildTaxCredits": {
+          "type": "number",
+          "example": 0,
+          "description": "Working Tax Credits and Child Tax Credits (SHBE field 98 or 154)"
+        },
+        "governmentTraining": {
+          "type": "number",
+          "example": 0,
+          "description": "Government Training (SHBE field 101 or 157)"
+        },
+        "grossWeeklyIncomeFromEmployment": {
+          "type": "number",
+          "example": 0,
+          "description": "Gross Weekly Employment Income (SHBE field 76 or 133)"
+        },
+        "grossWeeklyIncomeFromRemunerativeWork": {
+          "type": "number",
+          "example": 0,
+          "description": "Gross weekly income from remunerative work (SHBE field 214)"
+        },
+        "grossWeeklyIncomeFromSelfEmployment": {
+          "type": "number",
+          "example": 0,
+          "description": "Gross Weekly Self-Employment Income (SHBE field 78 or 135)"
+        },
+        "incapacityBenefitLongTerm": {
+          "type": "number",
+          "example": 0,
+          "description": "Incapacity Benefit Long Term (SHBE field 96 or 152)"
+        },
+        "incapacityBenefitShortTermHigher": {
+          "type": "number",
+          "example": 0,
+          "description": "Incapacity Benefit Short Term Higher (SHBE field 95 or 151)"
+        },
+        "incapacityBenefitShortTermLower": {
+          "type": "number",
+          "example": 0,
+          "description": "Incapacity Benefit Short Term Lower (SHBE field 94 or 150)"
+        },
+        "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly income from ESA: additional amount due to transitional protection from IB/SDA (SHBE field 30 or 31)"
+        },
+        "industrialInjuriesDisablementBenefit": {
+          "type": "number",
+          "example": 0,
+          "description": "Industrial Injuries Disablement Benefit (SHBE field 102 or 158)"
+        },
+        "maintenancePayments": {
+          "type": "number",
+          "example": 0,
+          "description": "Maintenance Payments (SHBE field 185 or 186)"
+        },
+        "maternityAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "Maternity Allowance (SHBE field 88 or 144)"
+        },
+        "modifiedAif": {
+          "type": "number",
+          "example": 0,
+          "description": "Adjusted Assessed Income Figure (SHBE field 74 or 132)"
+        },
+        "netWeeklyIncomeFromEmployment": {
+          "type": "number",
+          "example": 0,
+          "description": "Net Weekly Employment Income (SHBE field 77 or 134)"
+        },
+        "netWeeklyIncomeFromSelfEmployment": {
+          "type": "number",
+          "example": 0,
+          "description": "Net Weekly Self-Employment Income (SHBE field 79 or 136)"
+        },
+        "newDealFiftyPlusEmploymentCredit": {
+          "type": "number",
+          "example": 0,
+          "description": "New Deal Fifty Plus Employment Credit (SHBE field 97 or 153)"
+        },
+        "newEnterpriseAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "New Enterprise Allowance (SHBE field 83 or 140)"
+        },
+        "occupationalPension": {
+          "type": "number",
+          "example": 0,
+          "description": "Occupational Pension (SHBE field 187 or 188)"
+        },
+        "otherIncome": {
+          "type": "number",
+          "example": 0,
+          "description": "Other income (SHBE field 113 or 169)"
+        },
+        "pensionCredit": {
+          "type": "number",
+          "example": 0,
+          "description": "Pension Credit (Savings Credit) (SHBE field 183 or 184)"
+        },
+        "personalPension": {
+          "type": "number",
+          "example": 0,
+          "description": "Personal Pension (SHBE field 86 or 142)"
+        },
+        "severeDisabilityAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "Severe Disability Allowance (SHBE field 87 or 143)"
+        },
+        "stateRetirementPension": {
+          "type": "number",
+          "example": 0,
+          "description": "State Retirement Pension (SHBE field 105 or 162)"
+        },
+        "statutoryMaternityOrPaternityPay": {
+          "type": "number",
+          "example": 0,
+          "description": "Statutory Maternity Or Paternity Pay (SHBE field 104 or 161)"
+        },
+        "statutorySickPay": {
+          "type": "number",
+          "example": 0,
+          "description": "Statutory Sick Pay (SHBE field 112 or 160)"
+        },
+        "studentGrantOrLoan": {
+          "type": "number",
+          "example": 0,
+          "description": "Student Grant Or Loan (SHBE field 90 or 146)"
+        },
+        "totalAmountOfEarnedIncomeDisregarded": {
+          "type": "number",
+          "example": 0,
+          "description": "Total Disregarded Earned Income (SHBE field 80 or 137)"
+        },
+        "totalAmountOfIncomeDisregarded": {
+          "type": "number",
+          "example": 0,
+          "description": "Total amount of income disregarded (SHBE field 114 or 170)"
+        },
+        "totalCapital": {
+          "type": "number",
+          "example": 0,
+          "description": "Total Capital (SHBE field 75 or 239)"
+        },
+        "totalNumbersOfRemunerativeWorkPerWeek": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total hours of remunerative work per week (SHBE field 241 or 242)",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "trainingForWorkOrCommunityAction": {
+          "type": "number",
+          "example": 0,
+          "description": "Training For Work Or Community Action (SHBE field 93 or 149)"
+        },
+        "warDisablementPensionOrArmedForcesGip": {
+          "type": "number",
+          "example": 0,
+          "description": "War Disablement Pension Or Armed Forces Gip (SHBE field 106 or 163)"
+        },
+        "warMobilitySupplement": {
+          "type": "number",
+          "example": 0,
+          "description": "War Mobility Supplement (SHBE field 107 or 164)"
+        },
+        "warWidowOrWidowerPension": {
+          "type": "number",
+          "example": 0,
+          "description": "War Widow Or Widower Pension (SHBE field 108 or 165))"
+        },
+        "weeklyAmountOfChildcareComponentDisregarded": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly Disregarded Childcare Component (SHBE field 81 or 138)"
+        },
+        "weeklyEsaBasic": {
+          "type": "number",
+          "example": 0,
+          "description": "ESA: basic element (SHBE field 292 or 293)"
+        },
+        "weeklyEsaSc": {
+          "type": "number",
+          "example": 0,
+          "description": "ESA: SC element (SHBE field 296 or 297)"
+        },
+        "weeklyEsaWrac": {
+          "type": "number",
+          "example": 0,
+          "description": "ESA: WRAC element (SHBE field 294 or 295)"
+        },
+        "weeklyNotionalIncomeFromCapital": {
+          "type": "number",
+          "example": 0,
+          "description": "Capital (Claimant and Partner combined figure) (SHBE field 240)"
+        },
+        "widowedParentsAllowance": {
+          "type": "number",
+          "example": 0,
+          "description": "Widowed Parent’s Allowance (SHBE field 110 or 167)"
+        },
+        "widowsBenefit": {
+          "type": "number",
+          "example": 0,
+          "description": "Widows Benefit (SHBE field 189 or 190)"
+        }
+      },
+      "title": "income"
+    },
+    "landlord": {
+      "type": "object",
+      "properties": {
+        "addressLine1": {
+          "type": "string",
+          "description": "Landlord's address line 1 (SHBE field 303)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "addressLine2": {
+          "type": "string",
+          "description": "Landlord's address line 2 (SHBE field 304)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "addressLine3": {
+          "type": "string",
+          "description": "Landlord's address line 3 (SHBE field 305)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "addressLine4": {
+          "type": "string",
+          "description": "Landlord's address line 4 (SHBE field 306)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "companyName": {
+          "type": "string",
+          "description": "Landlord's company name (SHBE field 301)",
+          "minLength": 0,
+          "maxLength": 40
+        },
+        "forename": {
+          "type": "string",
+          "description": "Landlord's forename (SHBE field 302)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "postcode": {
+          "type": "string",
+          "description": "Landlord's postcode (SHBE field 307)",
+          "minLength": 0,
+          "maxLength": 8
+        },
+        "surname": {
+          "type": "string",
+          "description": "Landlord's surname (SHBE field 301)",
+          "minLength": 0,
+          "maxLength": 35
+        },
+        "title": {
+          "type": "string",
+          "description": "Landlord's title (SHBE field 300)",
+          "minLength": 0,
+          "maxLength": 4
+        }
+      },
+      "title": "landlord"
+    },
+    "nonDependant": {
+      "type": "object",
+      "properties": {
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Non-dependant's date of birth (SHBE field 315)"
+        },
+        "deductionApplied": {
+          "type": "number",
+          "example": 0,
+          "description": "Non-dependant deduction applied (SHBE field 17)"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Non-dependant's end date (SHBE field 310)"
+        },
+        "forename": {
+          "type": "string",
+          "description": "Non-dependant's forename (SHBE field 314)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "income": {
+          "$ref": "#/definitions/income"
+        },
+        "nino": {
+          "type": "string",
+          "example": "2019-01-01",
+          "description": "Non-dependant's nino (SHBE field 309)",
+          "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIUV])[A-Z]|[A-Z]([DFIOUV]))[A-Z]{2})[0-9]{6}[A-D]?$"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "example": "2019-01-01",
+          "description": "Non-dependant's start date (SHBE field 310)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Non-dependant's status (SHBE field 16)\n1 = student\n2 = in receipt of Work-Based Learning or Young People Training Allowance\n3 = prisoner\n4 = in hospital for more than 52 weeks\n5 = in receipt of IS or JSA(IB) or ESA(IB)\n6 = not in receipt of passporting benefit or Pension Credit (Savings Credit) or remunerative employment (includes contributory based ESA) \n7 = in remunerative employment (excluding Pension Credit cases)\n8 = in receipt of Pension Credit\n",
+          "pattern": "^[1-8]$"
+        },
+        "surname": {
+          "type": "string",
+          "description": "Non-dependant's surname (SHBE field 313)",
+          "minLength": 0,
+          "maxLength": 35
+        },
+        "title": {
+          "type": "string",
+          "description": "Non-dependant's title (SHBE field 312)",
+          "minLength": 0,
+          "maxLength": 4
+        }
+      },
+      "title": "nonDependant"
+    },
+    "partner": {
+      "type": "object",
+      "properties": {
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date",
+          "description": "Partner's date of birth (SHBE field 178)"
+        },
+        "dateOfDeath": {
+          "type": "string",
+          "format": "date",
+          "description": "Partner's date of death (SHBE field 284)"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Partner's end date (SHBE field 125)"
+        },
+        "forename1": {
+          "type": "string",
+          "description": "Partner's first forename (SHBE field 129)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "forename2": {
+          "type": "string",
+          "description": "Partner's second forename (SHBE field 283)",
+          "minLength": 0,
+          "maxLength": 13
+        },
+        "gender": {
+          "type": "string",
+          "description": "Partner's gender (SHBE field 213)\nM : Male\nF : Female\nX : gender is unknown\n",
+          "pattern": "^$|^[MFX]$"
+        },
+        "income": {
+          "$ref": "#/definitions/income"
+        },
+        "nino": {
+          "type": "string",
+          "description": "Partner's National Insurance Number (SHBE field 126)",
+          "pattern": "^((?!(BG|GB|KN|NK|NT|TN|ZZ)|([DFIUV])[A-Z]|[A-Z]([DFIOUV]))[A-Z]{2})[0-9]{6}[A-D]?$"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Partner's start date (SHBE field 124)"
+        },
+        "student": {
+          "type": "boolean",
+          "description": "Partner's student indicator (SHBE field 130)"
+        },
+        "surname": {
+          "type": "string",
+          "description": "Partner's surname (SHBE field 128)",
+          "minLength": 0,
+          "maxLength": 35
+        },
+        "title": {
+          "type": "string",
+          "description": "Partner's title (SHBE field 127)",
+          "minLength": 0,
+          "maxLength": 4
+        }
+      },
+      "title": "partner"
+    },
+    "rent": {
+      "type": "object",
+      "properties": {
+        "contractualRentAmount": {
+          "type": "number",
+          "example": 0,
+          "description": "Contractual Rent Amount (SHBE field 181)"
+        },
+        "extendedPaymentCase": {
+          "type": "string",
+          "description": "Extended Payment Case (SHBE field 55)\n0 : Not an extended payment case\n1 : Extended payment case (IS / JSA(IB) / ESA(IB))\n2 : Extended Payment Cases (IB / SDA / ESA(CB))",
+          "pattern": "^([012])$"
+        },
+        "reasonForPaymentToLandlordAgent": {
+          "type": "string",
+          "description": "Reason for Payment to Landlord / Property Agent (SHBE field 53)\n1 : Claimant choice / does not object (non-LHA only)\n2 : Claimant interest (non-LHA only)\n3 : Improbable that claimant will pay their rent (LHA only)\n4 : Claimant has rent arrears equivalent to less than 8 weeks - discretionary \n5 : Claimant has rent arrears equivalent to 8 weeks or more - mandatory \n6 : Unknown\n7 : Claimant likely to have difficulty in relation to the management of their financial affairs (LHA only)\n8 : Paid to landlord to enable the claimant to secure or retain a tenancy in the private rented sector (LHA only)\n",
+          "pattern": "^([12345678])$"
+        },
+        "rentAllowanceMethodOfPayment": {
+          "type": "string",
+          "description": "Rent Allowance Method of Payment (SHBE field 179)\n1 : ACT\n2 : Cheque\n3 : Giro\n99 : Other\n",
+          "pattern": "^(1|2|3|99)$"
+        },
+        "rentAllowancePaymentDestination": {
+          "type": "string",
+          "description": "Rent Allowance Payment Destination (SHBE field 180)\n1 : Payment to claimant, appointee or nominee\n2 : Payment direct to landlord/property agent\n3 : Split payment-excess paid to customer\n",
+          "pattern": "^([123])$"
+        },
+        "rentFreeWeeks": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Rent-free weeks indicator (SHBE field 287)",
+          "minimum": 0,
+          "exclusiveMinimum": false
+        },
+        "rentOfficerDeterminedIneligibleCharges": {
+          "type": "number",
+          "example": 0,
+          "description": "Rent Officer determination of weekly ineligible charges (SHBE field 67)"
+        },
+        "thirteenFiftyTwoWeekProtectionApplies": {
+          "type": "boolean",
+          "description": "13/52 week protection applies (SHBE field 71)"
+        },
+        "timePeriodContractualRentFigureCovers": {
+          "type": "string",
+          "description": "Time period contractual rent figure covers (SHBE field 182)\n1 = Weekly\n2 = Calendar Monthly\n3 = Annual\n5 = Daily\n6 = Fortnightly\n7 = Four Weekly\n8 = Quarterly ( or 3-monthly)\n9 = Half-yearly (or 6 monthly)\n99 = Other\n",
+          "pattern": "^(1|2|3|5|6|7|8|9|99)$"
+        },
+        "timingOfRentPaymentAllowance": {
+          "type": "string",
+          "description": "Timing of payment of rent allowance (SHBE field 54)\n1 : case paid wholly in advance\n2 : case paid partly in advance and partly in arrears\n3 : case paid wholly in arrears\n4 : case receiving 'payment on account' \n",
+          "pattern": "^([1234])$"
+        },
+        "weeklyAdditionalDiscretionaryForRentLiability": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly additional discretionary payment for rent liability (SHBE field 70)"
+        },
+        "weeklyClaimRelatedRent": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly Claim-Related Rent (CRR) (SHBE field 66)"
+        },
+        "weeklyDeductionForMeals": {
+          "type": "number",
+          "example": 0,
+          "description": "Total weekly deduction for meals (SHBE field 69)"
+        },
+        "weeklyEligibleRentAmount": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly eligible Rent amount (SHBE field 57)"
+        },
+        "weeklyLocalReferenceRent": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly Local Reference Rent (LRR) (SHBE field 64)"
+        },
+        "weeklyMaximumRent": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly Maximum Rent (MR) (SHBE field 68)"
+        },
+        "weeklySingleRoomRent": {
+          "type": "number",
+          "example": 0,
+          "description": "Weekly Single Room Rent (SRR) (SHBE field 65)"
+        }
+      },
+      "title": "rent"
+    }
+  }
+}

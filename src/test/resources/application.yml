@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: housing-benefit-service-stub
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      accept_float_as_int: false
+      fail_on_numbers_for_enums: true
+    mapper:
+      allow_coercion_of_scalars: false
+
+logging:
+  level:
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    uk.gov.dwp.housing: DEBUG
+    root: WARN

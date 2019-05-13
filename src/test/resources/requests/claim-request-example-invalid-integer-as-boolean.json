@@ -1,0 +1,22 @@
+{
+  "timestamp": "2019-02-05T12:35:26",
+  "localAuthorityReferenceNumber": "000000",
+  "claimReferenceNumber": "ClaimReferenceNumber",
+  "softwareProvider": 2,
+  "entitlements": [
+    {
+      "startDate": "2019-02-05",
+      "closedDate": "2019-02-05",
+      "claimant": {
+        "student": 1,
+        "nino": "XX787878A",
+        "title": "Mr",
+        "income": {
+          "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": 240.00,
+          "totalNumbersOfRemunerativeWorkPerWeek": 1
+        }
+      },
+      "partners": []
+    }
+  ]
+}
