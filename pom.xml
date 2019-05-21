@@ -19,7 +19,6 @@
     <properties>
         <!-- Project properties -->
         <java.version>11</java.version>
-        <minimum-required-maven.version>3.3.9</minimum-required-maven.version>
 
         <!-- Housing Benefit External API Spec -->
         <housing-benefit-spec.version>external-housing-api-spec-20190521113745.json</housing-benefit-spec.version>
@@ -30,7 +29,6 @@
 
         <!-- Maven plugin versions -->
         <openapi-generator-maven-plugin.version>4.0.0</openapi-generator-maven-plugin.version>
-        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     </properties>
 
     <dependencies>
@@ -104,26 +102,6 @@
                                 <returnSuccessCode>false</returnSuccessCode>
                                 <useTags>true</useTags>
                             </configOptions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>${minimum-required-maven.version}</version>
-                                </requireMavenVersion>
-                            </rules>
                         </configuration>
                     </execution>
                 </executions>
