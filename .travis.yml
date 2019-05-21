@@ -13,4 +13,4 @@ stages:
 jobs:
   include:
     - stage: unit-test
-      script: mvn clean test
+      script: ./mvn clean test
