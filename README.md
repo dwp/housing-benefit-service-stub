@@ -32,7 +32,7 @@ curl -H "Content-Type: application/json" \
      -d @src/test/resources/requests/claim-request-example-full.json -v http://localhost:8080/housing-benefit/v1/external/claim
 ```
 
-Further example request bodies can be found in [src/main/resources/oas](src/test/resources/requests).
+Further example request bodies can be found in [src/main/resources/requests](src/test/resources/requests).
 
 ## Caveats
 
