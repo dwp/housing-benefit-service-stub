@@ -1,13 +1,12 @@
 package uk.gov.dwp.housing.web.api;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import uk.gov.dwp.housing.util.TestUtil;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 public class ExternalApiControllerTest extends AbstractExternalApiControllerTest {
 

@@ -83,7 +83,7 @@
         "supportedAccommodation": 2,
         "income": {
           "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": 240.00,
-          "aif": 97.90,
+          "aif": 9000000000000007.90,
           "modifiedAif": 8.00,
           "grossWeeklyIncomeFromEmployment": 66,
           "netWeeklyIncomeFromEmployment": 72,

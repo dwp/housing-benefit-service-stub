@@ -13,4 +13,4 @@ logging:
   level:
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
     uk.gov.dwp.housing: DEBUG
-    root: DEBUG
+    root: INFO

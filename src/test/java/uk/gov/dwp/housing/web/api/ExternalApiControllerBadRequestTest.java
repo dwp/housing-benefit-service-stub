@@ -1,23 +1,14 @@
 package uk.gov.dwp.housing.web.api;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import uk.gov.dwp.housing.util.TestUtil;
-import uk.gov.dwp.housing.web.dto.ClaimRequest;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ExternalApiControllerBadRequestTest extends AbstractExternalApiControllerTest {
-
-
 
     @Test
     public void post_missing_request_body() throws Exception {
