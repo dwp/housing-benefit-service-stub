@@ -22,14 +22,14 @@ Start stub with `./mvnw spring-boot:run`.
 curl -H "Content-Type: application/json" \
      -H "correlationId: 12345678-1234-1234-1234-123456789012" \
      -H "apiKey: xQFmnA7KAO6705R52AmCVzH5JmklyaDf" \
-     -d @src/test/resources/requests/claim-request-example-basic.json -v http://localhost:8080/housing-benefit/external/claim
+     -d @src/test/resources/requests/claim-request-example-basic.json -v http://localhost:8080/housing-benefit/v1/external/claim
 ```
 
 ```
 curl -H "Content-Type: application/json" \
      -H "correlationId: 12345678-1234-1234-1234-123456789012" \
      -H "apiKey: xQFmnA7KAO6705R52AmCVzH5JmklyaDf" \
-     -d @src/test/resources/requests/claim-request-example-full.json -v http://localhost:8080/housing-benefit/external/claim
+     -d @src/test/resources/requests/claim-request-example-full.json -v http://localhost:8080/housing-benefit/v1/external/claim
 ```
 
 Further example request bodies can be found in [src/main/resources/oas](src/test/resources/requests).
