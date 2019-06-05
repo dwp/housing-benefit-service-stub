@@ -9,4 +9,3 @@ public class HousingBenefitServiceStubApplication {
         SpringApplication.run(HousingBenefitServiceStubApplication.class, args);
     }
 }
-
