@@ -21,7 +21,7 @@
         <java.version>11</java.version>
 
         <!-- Housing Benefit External API Spec -->
-        <housing-benefit-spec.version>external-housing-api-spec-20190521113745.json</housing-benefit-spec.version>
+        <housing-benefit-spec.version>external-housing-api-spec-20190605144631.json</housing-benefit-spec.version>
 
         <!-- Dependency versions -->
         <swagger.version>1.5.22</swagger.version>
