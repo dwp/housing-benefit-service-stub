@@ -10,11 +10,23 @@ The specification can be found in [src/main/resources/oas](src/main/resources/oa
 
 ## Requirements
 
-This stub requires [Java 11](http://openjdk.java.net/projects/jdk/11/).
+This stub requires [Java 11](https://adoptopenjdk.net/).
 
 ## Usage
 
 Start stub with `./mvnw spring-boot:run`.
+
+### Docker
+
+The [Jib](https://github.com/GoogleContainerTools/jib) plugin is included to build [Docker](https://www.docker.com/) images.
+
+To build to a local Docker daemon, use:
+
+`./mvnw compile jib:dockerBuild`
+
+Start the container:
+
+`docker run -p 8080:8080 housing-benefit-service-stub:LATEST`
 
 ### Example requests
 
@@ -44,3 +56,4 @@ Further example request bodies can be found in [src/main/resources/requests](src
 * [OpenAPI Generator](https://openapi-generator.tech/)
 * [OpenAPI Generator: Spring](https://openapi-generator.tech/docs/generators/spring)
 * [openapi-generator-maven-plugin](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-maven-plugin)
+* [Jib](https://github.com/GoogleContainerTools/jib)
