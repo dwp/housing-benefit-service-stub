@@ -1,7 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.0.2] - 2018-06-05
+## [0.0.3] - 2019-06-17
+
+### Added
+- Jib Maven plugin to build Docker containers.
+
+### Changed
+- `claimReferenceNumber` can now be 1-20 characters in length rather than a mandatory 20.
+
+[0.0.3]: https://github.com/dwp/housing-benefit-service-stub/releases/tag/v0.0.3
+
+## [0.0.2] - 2019-06-05
 
 ### Changed
 - HTTP status code 422 returned in case of NINO failing verification.
