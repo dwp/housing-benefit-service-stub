@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.4] - 2019-07-26
+
+### Changed
+- All monetary values now represented by Integers instead of BigDecimals.
+
+[0.0.4]: https://github.com/dwp/housing-benefit-service-stub/releases/tag/v0.0.4
+
 ## [0.0.3] - 2019-06-17
 
 ### Added
