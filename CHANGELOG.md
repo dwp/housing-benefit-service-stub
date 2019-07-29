@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.5] - 2019-07-29
+
+### Changed
+- pom.xml updated with changes for v0.0.4.
+
+[0.0.5]: https://github.com/dwp/housing-benefit-service-stub/releases/tag/v0.0.4
+
 ## [0.0.4] - 2019-07-26
 
 ### Changed
