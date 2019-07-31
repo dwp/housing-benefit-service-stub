@@ -81,9 +81,9 @@
         "shortTermSupportedAccommodation": 1,
         "supportedAccommodation": 2,
         "income": {
-          "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": 240.00,
-          "aif": 97.90,
-          "modifiedAif": 8.00,
+          "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": 240,
+          "aif": 97,
+          "modifiedAif": 8,
           "grossWeeklyIncomeFromEmployment": 66,
           "netWeeklyIncomeFromEmployment": 72,
           "grossWeeklyIncomeFromSelfEmployment": 92,

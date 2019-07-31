@@ -11,7 +11,7 @@
         "nino": "XX787878A",
         "title": "Mr",
         "income": {
-          "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": 240.00,
+          "incomeFromEsaAdditionalAmountDueToTransactionalProtectionFromIbSda": 240,
           "totalNumbersOfRemunerativeWorkPerWeek": 1.99
         }
       },
